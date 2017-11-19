@@ -57,20 +57,47 @@ var getVenues = function () {
 
 var getForecast = function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var urlToFetch, response, jsonResponse, _days;
+
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
             while (1) {
                 switch (_context2.prev = _context2.next) {
                     case 0:
-                        try {} catch (error) {
-                            console.log(error);
+                        urlToFetch = forecastUrl + apiKey + '&q=' + $input.val() + '&days=4&hour=11';
+                        _context2.prev = 1;
+                        _context2.next = 4;
+                        return fetch(urlToFetch);
+
+                    case 4:
+                        response = _context2.sent;
+
+                        if (!response.ok) {
+                            _context2.next = 11;
+                            break;
                         }
 
-                    case 1:
+                        _context2.next = 8;
+                        return response.json();
+
+                    case 8:
+                        jsonResponse = _context2.sent;
+
+                        console.log(jsonResponse);
+                        _days = jsonResponse.forecast.forecastday;
+
+                    case 11:
+                        return _context2.abrupt('return', days);
+
+                    case 14:
+                        _context2.prev = 14;
+                        _context2.t0 = _context2['catch'](1);
+                        console.log(_context2.t0);
+                    case 17:
                     case 'end':
                         return _context2.stop();
                 }
             }
-        }, _callee2, this);
+        }, _callee2, this, [[1, 14]]);
     }));
 
     return function getForecast() {

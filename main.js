@@ -34,7 +34,16 @@ async function getVenues() {
 }
 
 async function getForecast() {
-    try {}
+    const urlToFetch = forecastUrl + apiKey + '&q=' + $input.val() + '&days=4&hour=11';
+    try {
+        let response = await fetch(urlToFetch);
+        if (response.ok) {
+            let jsonResponse = await response.json();
+            console.log(jsonResponse);
+            let days = jsonResponse.forecast.forecastday;
+        }
+        return days;
+    }
     catch(error) {console.log(error);}
     
 }
