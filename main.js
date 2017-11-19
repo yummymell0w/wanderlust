@@ -45,7 +45,7 @@ async function getForecast() {
         return days;
     }
     catch(error) {console.log(error);}
-    
+
 }
 
 // Render functions
@@ -54,11 +54,11 @@ function renderVenues(venues) {
         let venueContent =
             '<h2>' + venues[index].name + '</h2>' +
             '<img class="venueimage" src="' + imgPrefix +
-            '<img suffix>' + '"/>' +
+            venues[index].photos.groups[0].items[0].suffix + '"/>' +
             '<h3>Address:</h3>' +
-            '<p>' + '<address>' + '</p>' +
-            '<p>' + '<city>' + '</p>' +
-            '<p>' + '<country>' + '</p>';
+            '<p>' + venues[index].location.address + '</p>' +
+            '<p>' + venues[index].location.city + '</p>' +
+            '<p>' + venues[index].location.country + '</p>';
         $venue.append(venueContent);
     });
     $destination.append('<h2>' + venues[0].location.city + '</h2>');
@@ -67,11 +67,11 @@ function renderVenues(venues) {
 function renderForecast(days) {
     $weatherDivs.forEach(($day, index) => {
         let weatherContent =
-            '<h2> High: ' + '<max temp>' + '</h2>' +
-            '<h2> Low: ' + '<min temp>' + '</h2>' +
-            '<img src="http://' + '<icon>' +
+            '<h2> High: ' + days[index].day.maxtemp_f + '</h2>' +
+            '<h2> Low: ' + days[index].day.mintemp_f + '</h2>' +
+            '<img src="http://' + days[index].hour[0].condition.icon +
             '" class="weathericon" />' +
-            '<h2>' + '<day of the week>' + '</h2>';
+            '<h2>' + weekDays[(new Date(days[index].date)).getDay()] + '</h2>';
         $day.append(weatherContent);
     });
 }
@@ -81,8 +81,8 @@ function executeSearch() {
     $weatherDivs.forEach(day => day.empty());
     $destination.empty();
     $container.css("visibility", "visible");
-    getVenues();
-    getForecast();
+    getVenues().then(venues => renderVenues(venues));
+    getForecast().then(forecast => renderForecast(forecast));;
     return false;
 }
 

@@ -129,7 +129,7 @@ var $venueDivs = [$("#venue1"), $("#venue2"), $("#venue3"), $("#venue4")];
 var $weatherDivs = [$("#weather1"), $("#weather2"), $("#weather3"), $("#weather4")];
 var weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];function renderVenues(venues) {
     $venueDivs.forEach(function ($venue, index) {
-        var venueContent = '<h2>' + venues[index].name + '</h2>' + '<img class="venueimage" src="' + imgPrefix + '<img suffix>' + '"/>' + '<h3>Address:</h3>' + '<p>' + '<address>' + '</p>' + '<p>' + '<city>' + '</p>' + '<p>' + '<country>' + '</p>';
+        var venueContent = '<h2>' + venues[index].name + '</h2>' + '<img class="venueimage" src="' + imgPrefix + venues[index].photos.groups[0].items[0].suffix + '"/>' + '<h3>Address:</h3>' + '<p>' + venues[index].location.address + '</p>' + '<p>' + venues[index].location.city + '</p>' + '<p>' + venues[index].location.country + '</p>';
         $venue.append(venueContent);
     });
     $destination.append('<h2>' + venues[0].location.city + '</h2>');
@@ -137,7 +137,7 @@ var weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturda
 
 function renderForecast(days) {
     $weatherDivs.forEach(function ($day, index) {
-        var weatherContent = '<h2> High: ' + '<max temp>' + '</h2>' + '<h2> Low: ' + '<min temp>' + '</h2>' + '<img src="http://' + '<icon>' + '" class="weathericon" />' + '<h2>' + '<day of the week>' + '</h2>';
+        var weatherContent = '<h2> High: ' + days[index].day.maxtemp_f + '</h2>' + '<h2> Low: ' + days[index].day.mintemp_f + '</h2>' + '<img src="http://' + days[index].hour[0].condition.icon + '" class="weathericon" />' + '<h2>' + weekDays[new Date(days[index].date).getDay()] + '</h2>';
         $day.append(weatherContent);
     });
 }
@@ -151,8 +151,12 @@ function executeSearch() {
     });
     $destination.empty();
     $container.css("visibility", "visible");
-    getVenues();
-    getForecast();
+    getVenues().then(function (venues) {
+        return renderVenues(venues);
+    });
+    getForecast().then(function (forecast) {
+        return renderForecast(forecast);
+    });;
     return false;
 }
 
